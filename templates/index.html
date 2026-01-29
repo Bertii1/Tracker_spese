@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard">
+    <h1>Dashboard Spese</h1>
+
+    {% if expenses %}
+    <div class="grid">
+        <div class="card chart-card">
+            <h2>Spese per Categoria</h2>
+            <canvas id="categoryChart"></canvas>
+        </div>
+
+        <div class="card">
+            <h2>Riepilogo</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Categoria</th>
+                        <th>Totale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cat, amount in totals.items() %}
+                    <tr>
+                        <td>{{ cat }}</td>
+                        <td>&euro; {{ "%.2f"|format(amount) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td><strong>Totale</strong></td>
+                        <td><strong>&euro; {{ "%.2f"|format(total) }}</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Ultime Spese</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Descrizione</th>
+                    <th>Categoria</th>
+                    <th>Importo</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for exp in expenses|reverse %}
+                <tr>
+                    <td>{{ exp.date }}</td>
+                    <td>{{ exp.description }}</td>
+                    <td><span class="badge">{{ exp.category }}</span></td>
+                    <td>&euro; {{ "%.2f"|format(exp.amount) }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('delete_expense', expense_id=exp.id) }}" onsubmit="return confirm('Eliminare questa spesa?')">
+                            <button type="submit" class="btn-delete" title="Elimina">&times;</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('categoryChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: {{ chart_labels|tojson }},
+                datasets: [{
+                    data: {{ chart_values|tojson }},
+                    backgroundColor: [
+                        '#4dc9f6', '#f67019', '#f53794', '#537bc4',
+                        '#acc236', '#166a8f', '#00a950', '#58595b',
+                        '#8549ba', '#e6194b', '#3cb44b', '#ffe119'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { padding: 16, font: { size: 14 } }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                let pct = ((context.parsed / total) * 100).toFixed(1);
+                                return `${context.label}: € ${context.parsed.toFixed(2)} (${pct}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+    {% else %}
+    <div class="empty-state">
+        <p>Nessuna spesa registrata.</p>
+        <a href="{{ url_for('add_expense') }}" class="btn-add">+ Aggiungi la prima spesa</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
