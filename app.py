@@ -7,22 +7,39 @@ from datetime import date
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 
 
-def get_base_dir():
-    """Restituisce la cartella base, funziona sia normalmente che come .exe"""
+def get_bundle_dir():
+    """Cartella con templates/static (dentro _internal quando e' un .exe)"""
+    if getattr(sys, "frozen", False):
+        return sys._MEIPASS
+    return os.path.dirname(__file__)
+
+
+def get_data_dir():
+    """Cartella dati scrivibile (accanto all'exe o accanto ad app.py)"""
     if getattr(sys, "frozen", False):
         return os.path.dirname(sys.executable)
     return os.path.dirname(__file__)
 
 
-BASE_DIR = get_base_dir()
+BUNDLE_DIR = get_bundle_dir()
+DATA_DIR = get_data_dir()
 
 app = Flask(
     __name__,
-    template_folder=os.path.join(BASE_DIR, "templates"),
-    static_folder=os.path.join(BASE_DIR, "static"),
+    template_folder=os.path.join(BUNDLE_DIR, "templates"),
+    static_folder=os.path.join(BUNDLE_DIR, "static"),
 )
 
-DATA_FILE = os.path.join(BASE_DIR, "data", "expenses.json")
+DATA_FILE = os.path.join(DATA_DIR, "data", "expenses.json")
+
+# Al primo avvio dell'exe, copia il file dati di esempio se non esiste
+data_folder = os.path.join(DATA_DIR, "data")
+if not os.path.exists(data_folder):
+    os.makedirs(data_folder)
+    import shutil
+    src = os.path.join(BUNDLE_DIR, "data", "expenses.json")
+    if os.path.exists(src):
+        shutil.copy2(src, os.path.join(data_folder, "expenses.json"))
 
 
 def load_data():
