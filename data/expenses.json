@@ -7,78 +7,8 @@
     "Salute",
     "Casa",
     "Altro",
-    "dario"
+    "dario",
+    "cuao"
   ],
-  "expenses": [
-    {
-      "id": 1,
-      "description": "Spesa settimanale Esselunga",
-      "amount": 78.30,
-      "category": "Alimentari",
-      "date": "2026-01-20"
-    },
-    {
-      "id": 2,
-      "description": "Bolletta luce gennaio",
-      "amount": 95.00,
-      "category": "Bollette",
-      "date": "2026-01-15"
-    },
-    {
-      "id": 3,
-      "description": "Abbonamento mezzi mensile",
-      "amount": 39.00,
-      "category": "Trasporti",
-      "date": "2026-01-05"
-    },
-    {
-      "id": 4,
-      "description": "Cena fuori con amici",
-      "amount": 32.50,
-      "category": "Svago",
-      "date": "2026-01-18"
-    },
-    {
-      "id": 5,
-      "description": "Farmacia - medicinali",
-      "amount": 18.90,
-      "category": "Salute",
-      "date": "2026-01-22"
-    },
-    {
-      "id": 6,
-      "description": "Detersivi e prodotti casa",
-      "amount": 24.60,
-      "category": "Casa",
-      "date": "2026-01-12"
-    },
-    {
-      "id": 7,
-      "description": "Frutta e verdura mercato",
-      "amount": 15.40,
-      "category": "Alimentari",
-      "date": "2026-01-25"
-    },
-    {
-      "id": 8,
-      "description": "Bolletta gas gennaio",
-      "amount": 120.00,
-      "category": "Bollette",
-      "date": "2026-01-16"
-    },
-    {
-      "id": 9,
-      "description": "Cinema e popcorn",
-      "amount": 22.00,
-      "category": "Svago",
-      "date": "2026-01-26"
-    },
-    {
-      "id": 10,
-      "description": "Benzina auto",
-      "amount": 55.00,
-      "category": "Trasporti",
-      "date": "2026-01-28"
-    }
-  ]
+  "expenses": []
 }

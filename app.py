@@ -6,6 +6,7 @@ import threading
 from datetime import date
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 
+PORTA_SERVER = 6700
 
 def get_bundle_dir():
     """Cartella con templates/static (dentro _internal quando e' un .exe)"""
@@ -118,8 +119,6 @@ def delete_expense(expense_id):
 
 if __name__ == "__main__":
     # Apri il browser automaticamente dopo 1.5 secondi
-    threading.Timer(1.5, lambda: webbrowser.open("http://127.0.0.1:5000")).start()
+    threading.Timer(1.5, lambda: webbrowser.open("http://127.0.0.1:" + str(PORTA_SERVER))).start()
     print("\n  Tracker Spese avviato!")
-    print("  Apri il browser su: http://127.0.0.1:5000")
-    print("  Per chiudere: chiudi questa finestra\n")
-    app.run(debug=False)
+    app.run(port=PORTA_SERVER, debug=False)
