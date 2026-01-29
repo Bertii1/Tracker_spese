@@ -1,11 +1,28 @@
 import json
 import os
+import sys
+import webbrowser
+import threading
 from datetime import date
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 
-app = Flask(__name__)
 
-DATA_FILE = os.path.join(os.path.dirname(__file__), "data", "expenses.json")
+def get_base_dir():
+    """Restituisce la cartella base, funziona sia normalmente che come .exe"""
+    if getattr(sys, "frozen", False):
+        return os.path.dirname(sys.executable)
+    return os.path.dirname(__file__)
+
+
+BASE_DIR = get_base_dir()
+
+app = Flask(
+    __name__,
+    template_folder=os.path.join(BASE_DIR, "templates"),
+    static_folder=os.path.join(BASE_DIR, "static"),
+)
+
+DATA_FILE = os.path.join(BASE_DIR, "data", "expenses.json")
 
 
 def load_data():
@@ -83,4 +100,9 @@ def delete_expense(expense_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Apri il browser automaticamente dopo 1.5 secondi
+    threading.Timer(1.5, lambda: webbrowser.open("http://127.0.0.1:5000")).start()
+    print("\n  Tracker Spese avviato!")
+    print("  Apri il browser su: http://127.0.0.1:5000")
+    print("  Per chiudere: chiudi questa finestra\n")
+    app.run(debug=False)
